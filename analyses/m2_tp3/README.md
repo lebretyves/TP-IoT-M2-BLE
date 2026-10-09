@@ -4,7 +4,7 @@
 
 Voie réalisée : **A**, Garmin Forerunner 265 diffusant la fréquence cardiaque vers nRF Connect sur Samsung Galaxy S24 FE. Le journal du 9 octobre 2026 confirme la connexion, le service Heart Rate `0x180D` et la réception de notifications de Heart Rate Measurement `0x2A37`. Les trois relevés de distance/RSSI et le tableau des cinq appareils scannés sont renseignés.
 
-Le fichier `trames_decodees.csv` contient les six trames fictives du PDF, produites et vérifiées par `decode_hrm.py`. Ce décodeur local est un complément : le notebook officiel `TP_M2_3_BLE_decodeur.ipynb` n’est pas encore fourni. Ses cinq questions restent à récupérer et traiter, sans en inventer le contenu.
+Le fichier `trames_decodees.csv` contient les six trames fictives du PDF, exportées par la cellule « Livrable » du notebook officiel [TP_M2_3_BLE_decodeur.ipynb](TP_M2_3_BLE_decodeur.ipynb). Le décodeur autonome `decode_hrm.py` reste un complément et exporte désormais vers `trames_decodees_local.csv`, ignoré par Git, pour préserver le CSV officiel.
 
 ## Manipulations à réaliser
 
@@ -83,9 +83,23 @@ La montre joue le rôle de serveur GATT : elle fournit les données. Le téléph
 
 À l’étape 6, l’énoncé demande une lecture du squelette ESP32, pas une réalisation matérielle aujourd’hui. Au projet 1, l’ESP32 remplacera la montre et enverra la FC calculée depuis le MAX30102. La ligne `trame[0] = 0x16;` annonce une FC sur un octet, le contact pris en charge et détecté, et un intervalle RR présent. Le squelette déduit un RR d’une FC simulée ; ce n’est pas une mesure réelle d’intervalle RR. Les trames Garmin observées commencent par `0x06`, sans RR.
 
-## Notebook officiel restant à fournir
+## Notebook officiel complété
 
-Récupérer `TP_M2_3_BLE_decodeur.ipynb` sur Teams / Moodle, puis l’importer dans Colab ou l’exécuter localement. Dans `MES_FC`, compléter les entrées correspondant aux trames 3, 5 et 2 par **62, 75 et 90 bpm**, en conservant la structure du notebook. Dans `MES_TRAMES_CAPTUREES`, saisir les cinq trames réelles du tableau ci-dessus. Exécuter les cellules, répondre aux cinq questions de sa section 4 et exporter le CSV avec la cellule « Livrable ». Le CSV actuel provient du décodeur local : il reste à le remplacer par l’export demandé du notebook officiel.
+Les 24 cellules du notebook fourni sont conservées. Dans le code, seules les valeurs de `MES_FC` pour les trames 2, 3 et 5 (90, 62 et 75 bpm) et la liste `MES_TRAMES_CAPTUREES` (les cinq premières notifications réelles) ont été renseignées. Les fonctions et les tests du professeur restent inchangés. Les réponses ci-dessous figurent aussi dans la cellule Markdown des questions. Les exemples facultatifs B et C sont exécutés avec leurs paramètres fournis ; le bonus A utilise les mesures Garmin.
+
+Depuis la racine du dépôt : `python -m pip install -r requirements.txt`, puis `python executer_tp.py`. Le script exécute le notebook dans `analyses/m2_tp3/`, enregistre ses sorties et produit le CSV officiel à cet emplacement.
+
+## Réponses aux cinq questions du notebook
+
+1. **Pourquoi prévoir une FC sur deux octets ?** Un octet ne représente que 0 à 255 ; le format uint16 permet de coder des valeurs au-delà de 255 sans changer de caractéristique. Le bit 0 précise le format employé : 255 est une limite d’encodage, pas une limite physiologique universelle.
+
+2. **Que faire de `04 3E` ?** Le capteur sait détecter le contact, mais indique son absence. L’application doit afficher « contact absent / mesure non fiable » et ne pas présenter les 62 bpm au soignant comme une mesure valide ; si la valeur est conservée ou transmise, elle doit rester explicitement marquée invalide.
+
+3. **Pourquoi deux RR dans la trame 6 ?** Une notification peut regrouper plusieurs intervalles entre battements, du plus ancien au plus récent. La FC annoncée (78 bpm) est une valeur distincte, potentiellement lissée, qui ne remplace pas les deux RR de 734,375 et 765,625 ms.
+
+4. **RR de la trame 5 lu en big-endian ?** `20 03` devient `0x2003` = 8195, soit 8195 / 1024 = **8,00293 s** (8002,93 ms), au lieu de 0,78125 s. Cela correspond à environ **7,50 bpm**, très incohérent avec les 75 bpm annoncés : la comparaison FC/RR et un contrôle de plausibilité auraient signalé l’erreur de lecture.
+
+5. **Pourquoi un format normalisé ?** Des capteurs et des clients de fabricants différents peuvent interpréter les mêmes champs, unités et indicateurs de qualité. Cela facilite les tests et réduit les ambiguïtés d’intégration, sans garantir à lui seul la sécurité ou la validation du dispositif.
 
 ## Vérification locale
 
@@ -99,5 +113,5 @@ Les tests vérifient les six FC attendues, l’énergie, les RR, les états de c
 - [x] Tableau des cinq appareils et mesures de RSSI complétés.
 - [x] Connexion voie A et cinq trames cardiaques réelles décodées.
 - [ ] Capture anonymisée enregistrée.
-- [ ] Notebook officiel exécuté et ses cinq questions traitées.
+- [x] Notebook officiel exécuté et ses cinq questions traitées.
 - [ ] Relecture des résultats par l’équipe et dépôt dans son repo.

@@ -1,6 +1,6 @@
 """Décodeur pédagogique autonome basé sur le format du PDF du TP.
 
-Ce script ne remplace pas le notebook officiel et ses questions manquantes.
+Ce script complète le notebook officiel sans remplacer son export CSV.
 Exécution : python decode_hrm.py
 """
 import csv
@@ -69,7 +69,7 @@ def tests():
 
 if __name__ == '__main__':
     rows = tests()
-    output = Path(__file__).with_name('trames_decodees.csv')
+    output = Path(__file__).with_name('trames_decodees_local.csv')
     with output.open('w', newline='', encoding='utf-8-sig') as stream:
         writer = csv.DictWriter(stream, fieldnames=['numero'] + list(rows[0]))
         writer.writeheader()
