@@ -61,7 +61,7 @@ Le journal contient **160 notifications cardiaques**, de 14:57:50.617 à 14:59:1
 
 Les notifications horodatées, sans adresse Bluetooth, sont enregistrées dans [notifications_garmin_2026-10-09.txt](notifications_garmin_2026-10-09.txt). Leur décodage complet est dans [mesures_garmin.json](mesures_garmin.json). Les trames des autres caractéristiques Garmin ont été exclues.
 
-La capture du service partagée dans la conversation affiche également **89 bpm**, contact détecté et notifications activées. Elle reste à enregistrer et anonymiser dans le dossier du rendu. Le premier journal ne contenait aucune notification `0x2A37` ; la réception a fonctionné après l’arrêt forcé de Garmin Connect et une nouvelle connexion. Cette succession ne suffit pas à établir avec certitude la cause du blocage.
+La capture du service partagée dans la conversation affiche également **89 bpm**, contact détecté et notifications activées. Pour le fichier de rendu demandé, l’équipe a fourni la capture du scan à 15:17 : [capture_nrfconnect.png](capture_nrfconnect.png), avec le prénom masqué par un rectangle opaque. Le PNG conserve les dimensions originales (945 × 2048) et tous les pixels hors de ce rectangle, vérifiés par comparaison avec le JPEG décodé. Le premier journal ne contenait aucune notification `0x2A37` ; la réception a fonctionné après l’arrêt forcé de Garmin Connect et une nouvelle connexion. Cette succession ne suffit pas à établir avec certitude la cause du blocage.
 
 ## Questions du scan
 
@@ -85,7 +85,7 @@ La montre joue le rôle de serveur GATT : elle fournit les données. Le téléph
 
 ## Notebook officiel complété
 
-Les 24 cellules du notebook fourni sont conservées. Dans le code, seules les valeurs de `MES_FC` pour les trames 2, 3 et 5 (90, 62 et 75 bpm) et la liste `MES_TRAMES_CAPTUREES` (les cinq premières notifications réelles) ont été renseignées. Les fonctions et les tests du professeur restent inchangés. Les réponses ci-dessous figurent aussi dans la cellule Markdown des questions. Les exemples facultatifs B et C sont exécutés avec leurs paramètres fournis ; le bonus A utilise les mesures Garmin.
+Le notebook principal conserve les 17 cellules de la partie obligatoire. Dans le code, seules les valeurs de `MES_FC` pour les trames 2, 3 et 5 (90, 62 et 75 bpm) ont été renseignées. Les fonctions et les tests du professeur restent inchangés. Les réponses ci-dessous figurent aussi dans la cellule Markdown des questions. Les sept cellules facultatives ont été déplacées dans [le sous-dossier bonus](bonus/README.md), où le décodeur fourni est repris pour une exécution autonome. Le bonus A contient les cinq trames Garmin ; le bonus B utilise 75 bpm et un RR de 0,78125 s ; le bonus C conserve les données fictives fournies.
 
 Depuis la racine du dépôt : `python -m pip install -r requirements.txt`, puis `python executer_tp.py`. Le script exécute le notebook dans `analyses/m2_tp3/`, enregistre ses sorties et produit le CSV officiel à cet emplacement.
 
@@ -112,6 +112,7 @@ Les tests vérifient les six FC attendues, l’énergie, les RR, les états de c
 - [x] Décodeur local et export des six trames fictives préparés.
 - [x] Tableau des cinq appareils et mesures de RSSI complétés.
 - [x] Connexion voie A et cinq trames cardiaques réelles décodées.
-- [ ] Capture anonymisée enregistrée.
+- [x] Capture anonymisée enregistrée et vérifiée.
 - [x] Notebook officiel exécuté et ses cinq questions traitées.
-- [ ] Relecture des résultats par l’équipe et dépôt dans son repo.
+- [x] Livrables préparés pour le dépôt de l’équipe.
+- [ ] Relecture des résultats par l’équipe et transmission du lien au professeur.
